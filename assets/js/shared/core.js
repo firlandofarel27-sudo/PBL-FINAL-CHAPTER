@@ -245,7 +245,6 @@ function shell(role) {
                     aria-label="Notifikasi">
               ♧<i class="notification-dot"></i>
             </button>
-
           </div>
         </header>
 
