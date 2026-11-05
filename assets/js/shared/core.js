@@ -12,6 +12,11 @@ function toast(msg) {
   setTimeout(() => t.remove(), 2600);
 }
 
+/* -------------------------------------------------------
+   DEMO DATA STORE
+   Saat backend tersedia, ganti bagian ini dengan fetch()
+------------------------------------------------------- */
+
 const demoItems = [
   {
     id: 'TP-1042',
@@ -20,8 +25,8 @@ const demoItems = [
     place: 'Perpustakaan · Lantai 2',
     date: '13 Okt 2026',
     status: 'Menunggu',
-    emoji: '👛',
-    owner: 'Raka Pratama'
+    owner: 'Raka Pratama',
+    desc: 'Dompet kulit pria warna hitam, berisi KTM dan uang tunai sekitar Rp150.000.'
   },
   {
     id: 'TP-1041',
@@ -30,8 +35,8 @@ const demoItems = [
     place: 'Gedung B · Lab 3',
     date: '13 Okt 2026',
     status: 'Prioritas',
-    emoji: '❄️',
-    owner: 'Dina Putri'
+    owner: 'Dina Putri',
+    desc: 'AC tidak dingin sejak pagi. Ruangan sangat panas dan mengganggu aktivitas praktikum.'
   },
   {
     id: 'TP-1038',
@@ -40,8 +45,8 @@ const demoItems = [
     place: 'Parkiran Timur',
     date: '12 Okt 2026',
     status: 'Terverifikasi',
-    emoji: '🔑',
-    owner: 'Fajar Ramadhan'
+    owner: 'Fajar Ramadhan',
+    desc: 'Kunci motor dengan gantungan kunci merah berbentuk helm. Ditemukan di dekat pos parkir timur.'
   },
   {
     id: 'TP-1036',
@@ -50,8 +55,8 @@ const demoItems = [
     place: 'Kantin Utama',
     date: '12 Okt 2026',
     status: 'Selesai',
-    emoji: '🧴',
-    owner: 'Nadia Putri'
+    owner: 'Nadia Putri',
+    desc: 'Botol minum warna abu-abu merek Hydro Flask, sudah diserahkan ke posko satpam.'
   },
   {
     id: 'TP-1033',
@@ -60,20 +65,70 @@ const demoItems = [
     place: 'Ruang Kelas A-203',
     date: '11 Okt 2026',
     status: 'Menunggu',
-    emoji: '💻',
-    owner: 'Rizky Maulana'
+    owner: 'Rizky Maulana',
+    desc: 'Laptop Asus warna silver, sticker Python di cover. Tertinggal saat kelas berakhir jam 13.00.'
   },
   {
     id: 'TP-1029',
-    name: 'Proyektor',
+    name: 'Proyektor Rusak',
     type: 'Kerusakan fasilitas',
     place: 'Gedung C · Kelas 2',
     date: '10 Okt 2026',
     status: 'Diproses',
-    emoji: '📽️',
-    owner: 'Bagas Saputra'
+    owner: 'Bagas Saputra',
+    desc: 'Proyektor tidak dapat menampilkan gambar. Kabel HDMI sudah dicoba semua, tetap tidak berfungsi.'
   }
 ];
+
+/* Demo klaim store (berbasis localStorage agar persisten selama sesi) */
+function getClaimsStore() {
+  try {
+    return JSON.parse(localStorage.getItem('titipin_claims') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveClaimsStore(claims) {
+  try {
+    localStorage.setItem('titipin_claims', JSON.stringify(claims));
+  } catch { /* noop */ }
+}
+
+/* Demo laporan store */
+function getReportsStore() {
+  try {
+    return JSON.parse(localStorage.getItem('titipin_reports') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveReportsStore(reports) {
+  try {
+    localStorage.setItem('titipin_reports', JSON.stringify(reports));
+  } catch { /* noop */ }
+}
+
+function generateCode(length = 6) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({ length }, () =>
+    chars[Math.floor(Math.random() * chars.length)]
+  ).join('');
+}
+
+function generateTicketId() {
+  const existing = [...demoItems, ...getReportsStore()];
+  const maxId = existing.reduce((max, i) => {
+    const num = parseInt((i.id || '').replace('TP-', '')) || 0;
+    return Math.max(max, num);
+  }, 1042);
+  return 'TP-' + (maxId + 1);
+}
+
+/* -------------------------------------------------------
+   ROLE & NAVIGASI
+------------------------------------------------------- */
 
 function roleInfo(role) {
   if (role === 'user') {
@@ -84,10 +139,10 @@ function roleInfo(role) {
       subtitle: 'Pantau laporan dan temukan barang Anda.',
       nav: [
         ['home', '⌂', 'Beranda'],
-        ['catalog', '▦', 'Katalog Barang'],
-        ['report', '＋', 'Buat Laporan'],
-        ['reports', '▤', 'Laporan Saya'],
-        ['claims', '◈', 'Tiket Klaim'],
+        ['catalog', '▦', 'Katalog'],
+        ['report', '＋', 'Laporan'],
+        ['reports', '▤', 'Riwayat'],
+        ['claims', '◈', 'Klaim'],
         ['profile', '●', 'Profil']
       ]
     };
@@ -125,19 +180,23 @@ function roleInfo(role) {
   };
 }
 
-function navHref(role, key) {
-  if (key === 'logout') return 'index.html';
-  return '#' + key;
-}
+/* -------------------------------------------------------
+   SHELL LAYOUT (Sidebar + Topbar + Content area)
+------------------------------------------------------- */
 
 function shell(role) {
   const info = roleInfo(role);
   const initials = info.name.split(' ')
     .map(x => x[0]).slice(0, 2).join('');
 
+  /* Bottom nav: max 5 item terpenting, label dipersingkat */
+  const bottomNavItems = info.nav.slice(0, 5);
+
   return `
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="app-shell">
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
         <a class="brand" href="index.html">
           <span class="brand-mark">⌕</span>
           <div>
@@ -172,7 +231,7 @@ function shell(role) {
       <main class="main-area">
         <header class="topbar">
           <div style="display:flex;align-items:center;gap:10px">
-            <button class="icon-btn mobile-menu" id="menuBtn">
+            <button class="icon-btn mobile-menu" id="menuBtn" aria-label="Buka menu">
               ☰
             </button>
             <span class="breadcrumb">
@@ -187,7 +246,7 @@ function shell(role) {
               ♧<i class="notification-dot"></i>
             </button>
 
-            <a class="top-user" href="#profile">
+            <a class="top-user" href="#profile" data-page="profile">
               <div class="avatar">${initials}</div>
               <div>
                 ${info.name}
@@ -200,9 +259,9 @@ function shell(role) {
         <section class="content" id="pageContent"></section>
       </main>
 
-      <nav class="mobile-nav">
-        ${info.nav.slice(0, 5).map(([k, ic, l]) => `
-          <a href="#${k}" data-page="${k}">
+      <nav class="mobile-nav" aria-label="Navigasi utama">
+        ${bottomNavItems.map(([k, ic, l]) => `
+          <a href="#${k}" data-page="${k}" aria-label="${l}">
             <span>${ic}</span>${l}
           </a>
         `).join('')}
@@ -210,6 +269,10 @@ function shell(role) {
     </div>
   `;
 }
+
+/* -------------------------------------------------------
+   KOMPONEN UI REUSABLE
+------------------------------------------------------- */
 
 function stat(icon, label, num, note) {
   return `
@@ -225,7 +288,7 @@ function stat(icon, label, num, note) {
 function actionRow(item, button = 'Cek') {
   return `
     <div class="action-row">
-      <div class="mini-icon">${item.emoji}</div>
+      <div class="mini-icon">${typeIconChar(item.type)}</div>
 
       <div class="action-copy">
         <b>${item.name}</b>
@@ -266,12 +329,7 @@ function table(items, admin = false) {
               <td>${i.place}</td>
 
               <td>
-                <span class="status ${
-                  i.status === 'Selesai' ||
-                  i.status === 'Terverifikasi' ? 'green' :
-                  i.status === 'Prioritas' ? 'red' :
-                  i.status === 'Diproses' ? 'blue' : ''
-                }">${i.status}</span>
+                <span class="status ${statusClass(i.status)}">${i.status}</span>
               </td>
 
               <td>${i.date}</td>
@@ -302,4 +360,37 @@ function heading(title, sub, actions = '') {
       <div class="welcome-actions">${actions}</div>
     </div>
   `;
+}
+
+/* -------------------------------------------------------
+   HELPER FUNCTIONS
+------------------------------------------------------- */
+
+function statusClass(status) {
+  if (status === 'Selesai' || status === 'Terverifikasi') return 'green';
+  if (status === 'Prioritas') return 'red';
+  if (status === 'Diproses') return 'blue';
+  return '';
+}
+
+/* Ikon teks konsisten (menggantikan emoji acak) */
+function typeIconChar(type) {
+  if (type === 'Barang hilang') return '⊗';
+  if (type === 'Barang temuan') return '◇';
+  if (type === 'Kerusakan fasilitas') return '⚡';
+  return '▣';
+}
+
+function typeIconClass(type) {
+  if (type === 'Barang hilang') return 'lost';
+  if (type === 'Barang temuan') return 'found';
+  if (type === 'Kerusakan fasilitas') return 'facility';
+  return 'found';
+}
+
+function typeLabel(type) {
+  if (type === 'Barang hilang') return 'Hilang';
+  if (type === 'Barang temuan') return 'Temuan';
+  if (type === 'Kerusakan fasilitas') return 'Fasilitas';
+  return type;
 }

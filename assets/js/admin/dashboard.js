@@ -1,8 +1,7 @@
-/* DASHBOARD ADMIN */
+﻿/* DASHBOARD ADMIN */
 
 function homeAdmin() {
   return `
-  <div id="app"></div>
     ${heading(
       'Ringkasan hari ini',
       'Selamat pagi, Pak Bayu',
