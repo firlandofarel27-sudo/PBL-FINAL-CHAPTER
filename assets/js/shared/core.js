@@ -246,13 +246,6 @@ function shell(role) {
               ♧<i class="notification-dot"></i>
             </button>
 
-            <a class="top-user" href="#profile" data-page="profile">
-              <div class="avatar">${initials}</div>
-              <div>
-                ${info.name}
-                <small>${info.title}</small>
-              </div>
-            </a>
           </div>
         </header>
 
