@@ -1,112 +1,95 @@
 
-/* ======================================
-   TITIPIN - AUTHENTICATION / LOGIN
-====================================== */
+document.addEventListener("DOMContentLoaded", function () {
 
-// Tujuan dashboard berdasarkan role
-const dashboardRoutes = {
-    user: "pages/user.html",
-    admin: "pages/admin.html",
-    superadmin: "pages/super-admin.html"
-};
+    // Tujuan halaman berdasarkan jenis akun
+    const dashboardRoutes = {
+        user: "pages/user.html",
+        admin: "pages/admin.html"
+    };
 
+    const loginForm = document.getElementById("loginForm");
+    const demoLogin = document.getElementById("demoLogin");
+    const togglePass = document.getElementById("togglePass");
+    const sso = document.getElementById("sso");
+    const forgotPassword = document.getElementById("forgotPassword");
 
-// Toggle password
-const togglePass = document.getElementById("togglePass");
+    // Fungsi masuk dashboard
+    function loginSuccess(role) {
 
-if (togglePass) {
-    togglePass.addEventListener("click", function () {
+        const destination = dashboardRoutes[role];
 
-        const password = document.getElementById("password");
-
-        if (password.type === "password") {
-            password.type = "text";
-            this.textContent = "Sembunyikan";
-        } else {
-            password.type = "password";
-            this.textContent = "Lihat";
+        if (!destination) {
+            alert("Role akun tidak ditemukan!");
+            return;
         }
 
-    });
-}
+        // Simpan informasi sesi demo
+        sessionStorage.setItem("titipin_logged_in", "true");
+        sessionStorage.setItem("titipin_role", role);
 
-
-// Proses login
-const loginForm = document.getElementById("loginForm");
-
-loginForm.addEventListener("submit", function (e) {
-
-    e.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-        alert("Email dan password wajib diisi!");
-        return;
+        // Pindah ke halaman dashboard
+        window.location.assign(destination);
     }
 
-    // Login demo: role dipilih melalui dropdown
-    const role = document.getElementById("demoRole").value;
+    // Login menggunakan tombol form
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    loginSuccess(role, email);
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const role = document.getElementById("demoRole").value;
 
-});
+            if (!email || !password) {
+                alert("Email dan password harus diisi!");
+                return;
+            }
 
-
-// Login demo berdasarkan role
-const demoLogin = document.getElementById("demoLogin");
-
-demoLogin.addEventListener("click", function () {
-
-    const role = document.getElementById("demoRole").value;
-
-    loginSuccess(role, "");
-
-});
-
-
-// Fungsi setelah login
-function loginSuccess(role, email) {
-
-    const destination = dashboardRoutes[role];
-
-    if (!destination) {
-        alert("Jenis akun tidak ditemukan!");
-        return;
+            loginSuccess(role);
+        });
     }
 
-    // Simpan sesi demo
-    sessionStorage.setItem("titipin_logged_in", "true");
-    sessionStorage.setItem("titipin_role", role);
-    sessionStorage.setItem("titipin_email", email);
+    // Login demo
+    if (demoLogin) {
+        demoLogin.addEventListener("click", function () {
 
-    // Arahkan ke dashboard
-    window.location.href = destination;
+            const role = document.getElementById("demoRole").value;
 
-}
+            loginSuccess(role);
 
+        });
+    }
 
-// SSO Kampus
-document.getElementById("sso").addEventListener("click", function () {
+    // Tampilkan atau sembunyikan password
+    if (togglePass) {
+        togglePass.addEventListener("click", function () {
 
-    alert(
-        "Fitur SSO Kampus belum aktif. " +
-        "Hubungkan terlebih dahulu dengan sistem autentikasi kampus."
-    );
+            const password = document.getElementById("password");
+
+            if (password.type === "password") {
+                password.type = "text";
+                this.textContent = "Sembunyikan";
+            } else {
+                password.type = "password";
+                this.textContent = "Lihat";
+            }
+
+        });
+    }
+
+    // SSO sementara
+    if (sso) {
+        sso.addEventListener("click", function () {
+            alert("Fitur SSO belum diaktifkan.");
+        });
+    }
+
+    // Lupa password
+    if (forgotPassword) {
+        forgotPassword.addEventListener("click", function (e) {
+            e.preventDefault();
+            alert("Silakan hubungi administrator.");
+        });
+    }
 
 });
-
-
-// Lupa password
-document.getElementById("forgotPassword")
-    .addEventListener("click", function (e) {
-
-        e.preventDefault();
-
-        alert(
-            "Silakan hubungi administrator untuk " +
-            "melakukan reset password."
-        );
-
-    });
