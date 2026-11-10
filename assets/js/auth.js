@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
         user: "pages/user.html",
         admin: "pages/admin.html"
     };
-
     const loginForm = document.getElementById("loginForm");
     const demoLogin = document.getElementById("demoLogin");
     const togglePass = document.getElementById("togglePass");
