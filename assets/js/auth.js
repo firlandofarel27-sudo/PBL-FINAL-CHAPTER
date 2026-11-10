@@ -1,29 +1,59 @@
-alert("TITIPIN AUTH BERHASIL DIMUAT!");
-
-console.log("AUTH JS BERHASIL!");
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Tujuan dashboard
+    const dashboardRoutes = {
+        user: "./pages/user.html",
+        admin: "./pages/admin.html"
+    };
 
     const demoLogin = document.getElementById("demoLogin");
     const demoRole = document.getElementById("demoRole");
 
-    if (!demoLogin || !demoRole) {
-        alert("Tombol login atau dropdown tidak ditemukan!");
-        return;
+    const loginForm = document.getElementById("loginForm");
+
+    // Fungsi masuk dashboard
+    function loginSuccess(role) {
+
+        const destination = dashboardRoutes[role];
+
+        if (!destination) {
+            alert("Jenis akun tidak ditemukan!");
+            return;
+        }
+
+        sessionStorage.setItem("titipin_logged_in", "true");
+        sessionStorage.setItem("titipin_role", role);
+
+        window.location.href = destination;
     }
 
-    demoLogin.addEventListener("click", function () {
+    // Login demo
+    if (demoLogin) {
+        demoLogin.addEventListener("click", function () {
 
-        const role = demoRole.value;
+            loginSuccess(demoRole.value);
 
-        if (role === "user") {
-            window.location.href = "./pages/user.html";
-        }
+        });
+    }
 
-        else if (role === "admin") {
-            window.location.href = "./pages/admin.html";
-        }
+    // Login menggunakan form
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
 
-    });
+            e.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            if (!email || !password) {
+                alert("Email dan password wajib diisi!");
+                return;
+            }
+
+            loginSuccess(demoRole.value);
+
+        });
+    }
 
 });
