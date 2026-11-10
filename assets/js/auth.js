@@ -1,4 +1,5 @@
-
+console.log("TITIPIN AUTH BERHASIL DIMUAT!");
+alert("JavaScript Login Berhasil Dimuat!");
 document.addEventListener("DOMContentLoaded", function () {
 
     // Tujuan halaman berdasarkan jenis akun
