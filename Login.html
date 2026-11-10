@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - TITIPIN</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="login-wrap">
+
+        <!-- BAGIAN KIRI -->
+        <div class="brand-panel">
+
+            <div class="brand">
+                <div class="brand-mark">⌕</div>
+
+                <div>
+                    <b>TITIPIN</b>
+                    <small>Campus Care</small>
+                </div>
+            </div>
+
+            <div class="brand-copy">
+
+                <p class="eyebrow">WELCOME TO TITIPIN</p>
+
+                <h1>
+                    Temukan.<br>
+                    Laporkan.<br>
+                    Titipkan.
+                </h1>
+
+                <p>
+                    Platform informasi kehilangan dan penemuan
+                    barang serta pelaporan kerusakan fasilitas
+                    di lingkungan kampus.
+                </p>
+
+            </div>
+
+            <div class="decor-circles"></div>
+
+            <div class="copyright">
+                © 2026 TITIPIN - Campus Care
+            </div>
+
+        </div>
+
+
+        <!-- BAGIAN KANAN -->
+        <div class="login-panel">
+
+            <div class="login-card">
+
+                <p class="eyebrow">ACCOUNT LOGIN</p>
+
+                <h2>Selamat Datang!</h2>
+
+                <p class="muted">
+                    Silakan masuk menggunakan akun kampus
+                    untuk melanjutkan ke TITIPIN.
+                </p>
+
+
+                <!-- FORM LOGIN -->
+                <form id="loginForm">
+
+                    <label for="email">
+                        Email Kampus
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="nama@kampus.ac.id"
+                        required
+                    >
+
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Masukkan password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="show-pass"
+                            id="togglePass"
+                        >
+                            Lihat
+                        </button>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <label class="check">
+                            <input
+                                type="checkbox"
+                                id="remember"
+                            >
+                            Ingat saya
+                        </label>
+
+                        <a href="#" id="forgotPassword">
+                            Lupa password?
+                        </a>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn primary full"
+                    >
+                        Masuk ke TITIPIN →
+                    </button>
+
+                </form>
+
+
+                <div class="or">
+                    ATAU
+                </div>
+
+
+                <button
+                    type="button"
+                    class="btn outline full"
+                    id="sso"
+                >
+                    🎓 Masuk dengan SSO Kampus
+                </button>
+
+
+                <!-- DEMO LOGIN -->
+                <div class="demo-login">
+
+                    <b>Demo Login</b>
+
+                    <p>
+                        Pilih jenis akun untuk mencoba
+                        tampilan masing-masing dashboard.
+                    </p>
+
+                    <label for="demoRole">
+                        Jenis akun
+                    </label>
+
+                    <select id="demoRole" class="select"
+                            style="width:100%;margin:8px 0">
+                        <option value="user">User / Mahasiswa</option>
+                        <option value="admin">Admin / Staf</option>
+                        <option value="superadmin">Super Admin</option>
+                    </select>
+
+                    <button
+                        type="button"
+                        class="btn primary full"
+                        id="demoLogin"
+                    >
+                        Masuk sebagai Demo
+                    </button>
+
+                </div>
+
+                <p class="tiny center muted"
+                   style="margin-top:20px">
+                    Sistem Informasi Kehilangan dan Pelaporan
+                    Fasilitas Kampus.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="assets/js/auth.js"></script>
+
+</body>
+</html>
