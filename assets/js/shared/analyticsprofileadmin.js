@@ -133,10 +133,22 @@ function profilePage(role) {
           <input placeholder="08xxxxxxxxxx">
         </div>
 
+       
         <div class="field full-width">
-          <button class="btn primary">Simpan perubahan</button>
-          <a class="btn outline" href="login.html">Keluar</a>
-        </div>
+
+      <button type="submit" class="btn primary">
+        Simpan perubahan
+      </button>
+
+      <button
+        type="button"
+        class="btn outline"
+        onclick="logout()">
+        Keluar
+      </button>
+
+      </div>
+
       </form>
     </section>
   `;
