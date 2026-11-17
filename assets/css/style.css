@@ -175,6 +175,11 @@
     gap: 5px;
 }
 
+.check input[type="checkbox"] {
+    flex-shrink: 0;
+    width: auto;
+}
+
 .btn.full {
     width: 100%;
     padding: 14px;
@@ -251,4 +256,7 @@
     .login-panel {
         padding: 30px 20px;
     }
+}
+body {
+    background-color: #e0f2f1 !important;
 }
