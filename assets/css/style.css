@@ -1214,6 +1214,11 @@ button { cursor: pointer; }
 
 /* --- KLAIM FORM (di dalam modal) --- */
 
+
+/* ==========================================
+   KLAIM FORM DAN TIKET KLAIM
+   ========================================== */
+
 .claim-form .field {
   margin-bottom: 14px;
 }
@@ -1229,22 +1234,66 @@ button { cursor: pointer; }
   outline: none;
 }
 
+/* Kotak hasil klaim diperbesar */
 .claim-result-box {
   background: #f6faf4;
   border: 1px solid #cdeac9;
-  border-radius: 10px;
-  padding: 18px;
+  border-radius: 14px;
+
+  width: 100%;
+  max-width: 850px;
+  min-height: 150px;
+
+  padding: 30px;
   text-align: center;
-  margin-top: 4px;
+  margin: 15px auto;
+
+  box-sizing: border-box;
 }
 
+/* Tulisan kode klaim diperbesar */
 .claim-code-display {
-  font-size: 28px;
+  font-size: 42px;
   font-weight: 800;
-  letter-spacing: 5px;
+  letter-spacing: 9px;
   color: var(--navy);
-  margin: 12px 0 6px;
+  margin: 18px 0 10px;
+  line-height: 1.4;
 }
+
+/* Keterangan kode */
+.claim-result-box p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Tombol salin kode */
+.claim-result-box .btn {
+  padding: 12px 22px;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* Tampilan HP */
+@media (max-width: 700px) {
+
+  .claim-result-box {
+    padding: 22px 15px;
+    min-height: 120px;
+  }
+
+  .claim-code-display {
+    font-size: 30px;
+    letter-spacing: 6px;
+  }
+
+  .claim-result-box p {
+    font-size: 12px;
+  }
+
+}
+
 
 /* --- SIDEBAR OVERLAY MOBILE --- */
 
