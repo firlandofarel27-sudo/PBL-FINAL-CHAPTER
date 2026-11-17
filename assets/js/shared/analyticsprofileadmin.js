@@ -135,7 +135,7 @@ function profilePage(role) {
 
         <div class="field full-width">
           <button class="btn primary">Simpan perubahan</button>
-          <a class="btn outline" href="index.html">Keluar</a>
+          <a class="btn outline" href="login.html">Keluar</a>
         </div>
       </form>
     </section>
