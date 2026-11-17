@@ -210,23 +210,9 @@ button { cursor: pointer; }
 }
 
 .check input[type="checkbox"] {
-<<<<<<< HEAD
     flex-shrink: 0;
     width: auto;
 }
-
-.btn.full {
-    width: 100%;
-    padding: 14px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-weight: bold;
-=======
-  flex-shrink: 0; 
-  width: auto;
->>>>>>> 927e92cee6a5326edbebc8037cfd4b8d5d3a930f
-}
-
 
 .btn {
   border: 0;
