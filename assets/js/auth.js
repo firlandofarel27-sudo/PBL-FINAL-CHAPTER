@@ -78,4 +78,19 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Form login tidak ditemukan!");
     }
 
+    function logout() {
+    // Hapus data sesi login
+    sessionStorage.clear();
+
+    // Hapus data autentikasi TITIPIN
+    localStorage.removeItem("titipinUser");
+    localStorage.removeItem("titipinRole");
+
+    // Kembali ke halaman login
+    window.location.replace("../Login.html");
+}
+
+// Agar bisa dipanggil dari tombol HTML
+window.logout = logout;
+
 });
