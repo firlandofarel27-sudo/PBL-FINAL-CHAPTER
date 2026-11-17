@@ -88,21 +88,22 @@ function reportForm() {
           <label>Lokasi kejadian *</label>
           <select required id="reportPlace">
             <option value="">Pilih lokasi</option>
-            <option>Perpustakaan</option>
-            <option>Gedung A</option>
-            <option>Gedung B</option>
-            <option>Gedung C</option>
-            <option>Kantin Utama</option>
-            <option>Parkiran Timur</option>
-            <option>Laboratorium</option>
-            <option>Aula Utama</option>
+            <option>Lantai 1</option>
+            <option>Lantai 2</option>
+            <option>Lantai 3</option>
+            <option>Lantai 4</option>
+            <option>Lantai 5</option>
+            <option>Lantai 6</option>
+            <option>Lantai 7</option>
+            <option>Lantai 8</option>
+            <option>Halaman Parkir</option>
           </select>
         </div>
 
         <div class="field">
           <label>Detail lokasi spesifik</label>
           <input id="reportPlaceDetail"
-                 placeholder="Contoh: Lantai 2, meja dekat jendela">
+                 placeholder="Contoh: Lantai 5 Kelas LPR()">
         </div>
 
         <div class="field">
