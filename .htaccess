@@ -1,0 +1,17 @@
+# Meneruskan semua request ke public/ agar app/, config/, database/,
+# dan views/ tidak pernah bisa dibuka langsung dari browser.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Berkas di public/ (aset, unggahan, front controller) ditangani sendiri
+    # oleh .htaccess di dalamnya.
+    RewriteRule ^public/ - [L]
+
+    # Berkas nyata lain di akar proyek (misalnya index.php pengalih) dilayani apa adanya.
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>
+
+Options -Indexes

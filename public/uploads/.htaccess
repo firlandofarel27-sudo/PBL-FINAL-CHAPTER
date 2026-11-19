@@ -1,0 +1,15 @@
+# Folder ini hanya berisi gambar unggahan pengguna.
+#
+# php_flag engine off TIDAK dipakai karena Apache di sini menjalankan PHP
+# lewat mod_fcgid, dan directive tersebut membuat seluruh folder error 500.
+# RemoveHandler lebih aman: berkas .php yang lolos tetap tidak dieksekusi.
+
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar
+AddType text/plain .php .phtml .phar
+
+Options -Indexes -ExecCGI
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
