@@ -14,10 +14,23 @@ declare(strict_types=1);
  * @var array<int, array<string, mixed>>  $lokasis
  */
 ?>
+<?php
+/* Tautan ekspor membawa filter yang sedang aktif agar isi berkas sama
+   dengan yang terlihat di tabel. */
+$filterEkspor = http_build_query(array_filter([
+    'q'      => $keyword,
+    'status' => $status,
+    'jenis'  => $jenis,
+    'lokasi' => $lokasi,
+], static fn (string $nilai): bool => $nilai !== ''));
+
+$awalan = $filterEkspor === '' ? '?' : '?' . $filterEkspor . '&';
+?>
 <?= App\Core\View::capture('partials/page-heading', [
     'judul' => 'Manajemen Laporan',
     'sub'   => 'Cari, tinjau, dan kelola laporan kampus.',
-    'aksi'  => '<a class="btn outline" href="' . url('/admin/barang/ekspor') . '">↓ Ekspor CSV</a>'
+    'aksi'  => '<a class="btn outline" href="' . url('/admin/barang/ekspor' . $awalan . 'format=csv') . '">↓ CSV</a>'
+        . '<a class="btn outline" href="' . url('/admin/barang/ekspor' . $awalan . 'format=xlsx') . '">↓ Excel</a>'
         . '<a class="btn outline" href="' . url('/admin/fasilitas') . '">Kerusakan fasilitas →</a>',
 ]) ?>
 
