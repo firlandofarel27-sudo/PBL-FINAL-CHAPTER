@@ -11,10 +11,24 @@ use App\Models\Kategori;
 use App\Models\Lokasi;
 use App\Services\StatistikService;
 use App\Services\UploadService;
-
+use App\Services\XlsxService;
 
 final class BarangAdminController extends Controller
 {
+    /**
+     * Judul kolom ekspor, dipakai bersama oleh CSV dan Excel.
+     *
+     * @var list<string>
+     */
+    private const KOLOM_EKSPOR = ['ID', 'Nama', 'Jenis', 'Kategori', 'Lokasi', 'Status', 'Tanggal', 'Pelapor'];
+
+    /**
+     * Lebar kolom Excel (dalam karakter) untuk setiap kolom di atas.
+     *
+     * @var list<int>
+     */
+    private const LEBAR_KOLOM = [12, 32, 18, 34, 36, 22, 14, 26];
+
     public function index(Request $request): void
     {
         $keyword  = (string) $request->query('q', '');
@@ -117,24 +131,83 @@ final class BarangAdminController extends Controller
     }
 
     /**
-     * Mengunduh seluruh laporan barang sebagai CSV.
+     * Mengunduh laporan barang sesuai filter aktif.
      *
-     * Nilai dibungkus tanda kutip dan tanda kutip di dalamnya digandakan
-     * agar aman dari penyisipan rumus spreadsheet (CSV injection).
+     * Format ditentukan parameter `format`:
+     * - `csv`  (bawaan) → teks CSV, aman dari CSV injection
+     * - `xlsx`          → berkas Excel asli (lihat XlsxService)
      */
     public function export(Request $request): void
     {
-        $status = (string) $request->query('status', '');
-        $jenis  = (string) $request->query('jenis', '');
+        $format  = (string) $request->query('format', 'csv');
+        $filters = $this->exportFilters($request);
+        $baris   = $this->exportRows($filters);
+        $tanggal = date('Y-m-d');
 
-        $filters = array_filter([
+        if ($format === 'xlsx') {
+            XlsxService::download(
+                'laporan-titipin-' . $tanggal . '.xlsx',
+                'Laporan',
+                self::KOLOM_EKSPOR,
+                $baris,
+                self::LEBAR_KOLOM
+            );
+        }
+
+        $this->exportCsv('laporan-titipin-' . $tanggal . '.csv', $baris);
+    }
+
+    /**
+     * Filter laporan dari query string, dipakai bersama CSV dan Excel.
+     *
+     * @return array<string, string>
+     */
+    private function exportFilters(Request $request): array
+    {
+        return array_filter([
             'q'      => (string) $request->query('q', ''),
-            'status' => $status,
-            'jenis'  => $jenis,
-        ], static fn (string $value): bool => $value !== '');
+            'status' => (string) $request->query('status', ''),
+            'jenis'  => (string) $request->query('jenis', ''),
+            'lokasi' => (string) $request->query('lokasi', ''),
+        ], static fn (string $nilai): bool => $nilai !== '');
+    }
 
-        $berkas = 'laporan-titipin-' . date('Y-m-d') . '.csv';
+    /**
+     * Menyusun baris ekspor; urutan kolom sama untuk kedua format.
+     *
+     * @param  array<string, string>  $filters
+     * @return array<int, array<int, string>>
+     */
+    private function exportRows(array $filters): array
+    {
+        $baris = [];
 
+        foreach (Barang::all($filters) as $item) {
+            $baris[] = [
+                'TP-' . $item['id_barang'],
+                (string) $item['nama_barang'],
+                jenis_label((string) $item['jenis']),
+                (string) ($item['nama_kategori'] ?? ''),
+                trim((string) ($item['nama_lokasi'] ?? '') . ' ' . (string) ($item['lokasi_detail'] ?? '')),
+                status_label((string) $item['status']),
+                (string) ($item['tanggal'] ?? ''),
+                (string) ($item['nama_pelapor'] ?? ''),
+            ];
+        }
+
+        return $baris;
+    }
+
+    /**
+     * Mengirim CSV ke browser.
+     *
+     * Nilai yang diawali karakter pemicu rumus diberi awalan kutip tunggal
+     * agar tidak dieksekusi spreadsheet (CSV injection).
+     *
+     * @param  array<int, array<int, string>>  $baris
+     */
+    private function exportCsv(string $berkas, array $baris): never
+    {
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $berkas . '"');
 
@@ -145,25 +218,14 @@ final class BarangAdminController extends Controller
             $this->redirect('/admin/barang');
         }
 
-        fputcsv($keluaran, ['ID', 'Nama', 'Jenis', 'Kategori', 'Lokasi', 'Status', 'Tanggal', 'Pelapor']);
+        fputcsv($keluaran, self::KOLOM_EKSPOR);
 
-        foreach (Barang::all($filters) as $item) {
-            $baris = [
-                'TP-' . $item['id_barang'],
-                $item['nama_barang'],
-                jenis_label((string) $item['jenis']),
-                (string) ($item['nama_kategori'] ?? ''),
-                trim((string) ($item['nama_lokasi'] ?? '') . ' ' . (string) ($item['lokasi_detail'] ?? '')),
-                (string) $item['status'],
-                (string) ($item['tanggal'] ?? ''),
-                (string) ($item['nama_pelapor'] ?? ''),
-            ];
-
+        foreach ($baris as $nilai) {
             fputcsv($keluaran, array_map(
-                static fn (string $nilai): string => preg_match('/^[=+\-@\t\r]/', $nilai) === 1
-                    ? "'" . $nilai
-                    : $nilai,
-                $baris
+                static fn (string $sel): string => preg_match('/^[=+\-@\t\r]/', $sel) === 1
+                    ? "'" . $sel
+                    : $sel,
+                $nilai
             ));
         }
 
