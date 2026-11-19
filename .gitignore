@@ -1,0 +1,10 @@
+# Kredensial database
+.env
+
+# Berkas hasil upload pengguna
+public/uploads/*
+!public/uploads/.htaccess
+
+# Berkas sementara
+storage/
+*.log
