@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-/**
- * Status autentikasi pengguna yang sedang login.
- *
- * Identitas hanya disimpan sebagai NIM di sesi; data lengkap diambil ulang
- * dari database sekali per request agar perubahan peran langsung berlaku.
- */
 final class Auth
 {
     private static ?array $user = null;
