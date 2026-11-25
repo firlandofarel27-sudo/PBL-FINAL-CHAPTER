@@ -1426,11 +1426,16 @@ body {
 /* Foto pada kartu dan halaman detail */
 .item-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .detail-photo {
+  /* Rasio mengikuti foto asli: lebar penuh, tinggi menyesuaikan,
+     dan tidak pernah dipotong (contain) walau tinggi dibatasi layar. */
+  display: block;
   width: 100%;
-  max-height: 320px;
-  object-fit: cover;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  background: #f4f7f6;
   border-radius: 10px;
-  margin-bottom: 14px;
+  margin: 0 auto 14px;
   border: 1px solid var(--line);
 }
 
@@ -1455,7 +1460,7 @@ a.tab-btn { text-align: center; text-decoration: none; display: block; }
 @media (max-width: 700px) {
   .table-actions { flex-direction: column; align-items: stretch; }
   .inline-form { flex-direction: column; align-items: stretch; }
-  .detail-photo { max-height: 220px; }
+  .detail-photo { max-height: 45vh; }
 }
 
 /* ==========================================================
