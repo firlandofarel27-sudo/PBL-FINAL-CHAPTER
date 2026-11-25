@@ -81,10 +81,17 @@ function url(string $path = '/'): string
 
 /**
  * URL aset statis di dalam public/.
+ *
+ * Waktu ubah berkas ditambahkan sebagai versi agar browser tidak
+ * memakai salinan lama setelah CSS/JS diperbarui.
  */
 function asset(string $path): string
 {
-    return url('assets/' . ltrim($path, '/'));
+    $bersih = ltrim($path, '/');
+    $berkas = dirname(__DIR__) . '/public/assets/' . $bersih;
+    $versi  = is_file($berkas) ? (string) filemtime($berkas) : '';
+
+    return url('assets/' . $bersih) . ($versi === '' ? '' : '?v=' . $versi);
 }
 
 /**
