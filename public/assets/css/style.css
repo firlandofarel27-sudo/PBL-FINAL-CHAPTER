@@ -294,6 +294,51 @@ button { cursor: pointer; }
   padding: 22px 13px;
   flex-shrink: 0;
   min-height: 100vh;
+  transition: width .18s ease, padding .18s ease;
+}
+
+/* --- Sidebar ringkas (rail ikon) ---
+   Kelas dipasang pada <html> oleh skrip di <head> dan tombol topbar.
+   Hanya berlaku di layar lebar; di ponsel sidebar tetap laci geser. */
+.logout-icon { display: none; }
+
+@media (min-width: 701px) {
+  html.sidebar-collapsed .sidebar {
+    width: 74px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  html.sidebar-collapsed .sidebar .brand {
+    padding: 0 0 35px;
+    justify-content: center;
+  }
+
+  html.sidebar-collapsed .sidebar .brand > div,
+  html.sidebar-collapsed .side-label,
+  html.sidebar-collapsed .nav-text,
+  html.sidebar-collapsed .profile-mini > div,
+  html.sidebar-collapsed .logout-text {
+    display: none;
+  }
+
+  html.sidebar-collapsed .nav-link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  html.sidebar-collapsed .nav-link .nav-icon { width: auto; }
+
+  html.sidebar-collapsed .side-bottom {
+    padding: 15px 0 0;
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+  }
+
+  html.sidebar-collapsed .logout-form { margin-top: 0; width: 100%; }
+  html.sidebar-collapsed .logout-form .btn { padding: 9px 0; }
+  html.sidebar-collapsed .logout-icon { display: inline; font-size: 13px; }
 }
 
 .sidebar .brand { padding: 0 10px 35px; }
@@ -384,7 +429,22 @@ button { cursor: pointer; }
   border-radius: 9px;
   color: var(--ink);
   position: relative;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
 }
+
+.icon-btn:hover { color: var(--navy); border-color: #c3d2d0; }
+.icon-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.icon-btn svg { display: block; }
+
+/* Ikon chevron tombol ringkas sidebar: SVG, bukan teks «,
+   supaya tidak dirender sebagai emoji berwarna. */
+.collapse-icon { display: block; transition: transform .18s ease; }
+html.sidebar-collapsed .collapse-icon { transform: rotate(180deg); }
 
 .notification-dot {
   position: absolute;
@@ -771,6 +831,13 @@ button { cursor: pointer; }
 /* NAVIGASI MOBILE DAN NOTIFIKASI */
 
 .mobile-menu { display: none; }
+/* Tombol ringkas sidebar: tetap grid agar ikon SVG di tengah. */
+.desktop-menu { display: inline-grid; place-items: center; }
+
+@media (max-width: 700px) {
+  /* Di ponsel sidebar berupa laci, jadi tombol ringkas tidak dipakai. */
+  .desktop-menu { display: none; }
+}
 
 .toast {
   position: fixed;
@@ -866,7 +933,7 @@ button { cursor: pointer; }
   .app-shell { display: block; padding-bottom: 65px; }
 
   .topbar { height: 60px; padding: 0 16px; }
-  .mobile-menu { display: inline-flex; }
+  .mobile-menu { display: inline-grid; place-items: center; }
 
   .top-actions { gap: 8px; }
   .top-user > div:not(.avatar) { display: none; }
@@ -1347,7 +1414,8 @@ button { cursor: pointer; }
 
   /* Hamburger hanya visible di mobile, tidak tabrakan */
   .mobile-menu {
-    display: inline-flex !important;
+    display: inline-grid !important;
+    place-items: center;
   }
 
   /* Bottom nav tetap ada, tapi sidebar juga bisa dibuka lewat hamburger */
@@ -1368,7 +1436,8 @@ button { cursor: pointer; }
   /* Hamburger tetap tampil karena menu bisa berisi lebih dari 5 item
      dan bottom nav hanya memuat 5 item pertama. */
   .mobile-menu {
-    display: inline-flex !important;
+    display: inline-grid !important;
+    place-items: center;
   }
 
   .content { padding-bottom: 84px; }
