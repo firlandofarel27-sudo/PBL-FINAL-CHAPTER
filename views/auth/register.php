@@ -62,7 +62,14 @@ declare(strict_types=1);
 
         <div class="field">
             <label for="jurusan">Jurusan</label>
-            <input id="jurusan" name="jurusan" value="<?= e(old('jurusan')) ?>" placeholder="Teknik Informatika">
+            <select id="jurusan" name="jurusan">
+                <option value="">Pilih jurusan</option>
+                <?php foreach (['Teknik Informatika', 'Sistem Informasi Bisnis'] as $opsi): ?>
+                    <option value="<?= e($opsi) ?>" <?= old('jurusan') === $opsi ? 'selected' : '' ?>>
+                        <?= e($opsi) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="field">
