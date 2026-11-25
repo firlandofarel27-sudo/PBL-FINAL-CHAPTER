@@ -27,7 +27,7 @@ declare(strict_types=1);
     </div>
 </section>
 
-<div class="stats">
+<div class="stats stats-3">
     <article class="stat-card">
         <div class="stat-icon">◇</div>
         <div class="stat-label">Barang tersedia</div>
