@@ -34,7 +34,7 @@ $awalan = $filterEkspor === '' ? '?' : '?' . $filterEkspor . '&';
         . '<a class="btn outline" href="' . url('/admin/fasilitas') . '">Kerusakan fasilitas →</a>',
 ]) ?>
 
-<div class="stats">
+<div class="stats stats-3">
     <article class="stat-card">
         <div class="stat-icon">▤</div>
         <div class="stat-label">Total laporan</div>
