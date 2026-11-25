@@ -4,7 +4,7 @@
    Empat hal saja:
    1. tampilkan / sembunyikan password
    2. pratinjau foto sebelum diunggah
-   3. sidebar di layar kecil
+   3. sidebar: laci di layar kecil, ringkas/lebar di desktop
    4. popup detail barang, filter lantai -> ruangan,
       penyesuaian label formulir, dan panel notifikasi
 
@@ -84,10 +84,14 @@
         });
     }
 
-    /* --- 3. Sidebar di layar kecil --- */
+    /* --- 3. Sidebar: laci di layar kecil, ringkas/lebar di desktop --- */
     var tombolMenu = document.getElementById('menuBtn');
+    var tombolRingkas = document.getElementById('collapseBtn');
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebarOverlay');
+    var akar = document.documentElement;
+    var nim = akar.dataset.user || '';
+    var kunciSidebar = nim ? 'titipin.sidebar.' + nim : 'titipin.sidebar';
 
     function tutupSidebar() {
         if (sidebar) {
@@ -111,6 +115,37 @@
 
     if (overlay) {
         overlay.addEventListener('click', tutupSidebar);
+    }
+
+    function perbaruiTombolRingkas() {
+        if (!tombolRingkas) {
+            return;
+        }
+
+        var ringkas = akar.classList.contains('sidebar-collapsed');
+        var label = ringkas ? 'Buka menu samping' : 'Sembunyikan menu samping';
+
+        /* Arah panah diatur lewat rotasi CSS (.collapse-icon), bukan
+           teks, supaya tidak menimpa ikon SVG di dalam tombol. */
+        tombolRingkas.setAttribute('aria-expanded', ringkas ? 'false' : 'true');
+        tombolRingkas.setAttribute('aria-label', label);
+        tombolRingkas.title = label;
+    }
+
+    perbaruiTombolRingkas();
+
+    if (tombolRingkas) {
+        tombolRingkas.addEventListener('click', function () {
+            var ringkas = akar.classList.toggle('sidebar-collapsed');
+
+            try {
+                window.localStorage.setItem(kunciSidebar, ringkas ? 'tutup' : 'buka');
+            } catch (e) {
+                /* localStorage diblokir: pilihan hanya berlaku sesi ini. */
+            }
+
+            perbaruiTombolRingkas();
+        });
     }
 
     /* --- 4a. Popup detail barang --- */
